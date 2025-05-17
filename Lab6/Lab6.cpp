@@ -1,56 +1,55 @@
 #include <iostream>
 #include <vector>
-#include <stdexcept>
+#include <string>
+#include <stdexcept> 
 
 template <typename T>
 class Queue {
 private:
-    std::vector<T> items;
-    size_t frontIndex = 0;
+    std::vector<T> data;
 
 public:
-    void push(const T& item)
-    {
-        items.push_back(item);
+    void push(const T& item) {
+        data.push_back(item);
     }
 
-    T pop()
-    {
-        if (items.empty())
-        {
-            throw std::runtime_error("Queue is empty! Cannot pop.");
+    void pop() {
+        if (data.empty()) {
+            throw std::out_of_range("Невозможно извлечь из пустой очереди!");
         }
-        T removedItem = items[frontIndex];
-        frontIndex++;
+        data.erase(data.begin());
+    }
 
-        if (frontIndex > items.size() / 2)
-        {
-            items.erase(items.begin(), items.begin() + frontIndex);
-            frontIndex = 0;
+    T front() const {
+        if (data.empty()) {
+            throw std::out_of_range("Очередь пуста.");
         }
-        return removedItem;
+        return data.front();
+    }
+
+    bool empty() const {
+        return data.empty();
     }
 
     void display() const {
-        std::cout << "Queue contents: ";
+        std::cout << "Очередь содержит: ";
         for (const auto& item : data) {
             std::cout << item << " ";
         }
         std::cout << "\n";
     }
 };
-
 int main() {
     Queue<int> intQueue;
 
     try {
         intQueue.pop();
     } catch (const std::out_of_range& e) {
-        std::cerr << "Exception caught: " << e.what() << std::endl;
+        std::cerr << "Исключение: " << e.what() << std::endl;
     }
 
-    intQueue.push(10);
-    intQueue.push(20);
+    intQueue.push(50);
+    intQueue.push(100);
     intQueue.display();
 
     try {
@@ -58,7 +57,7 @@ int main() {
         intQueue.pop();
         intQueue.pop();
     } catch (const std::out_of_range& e) {
-        std::cerr << "Exception caught: " << e.what() << std::endl;
+        std::cerr << "Исключение: " << e.what() << std::endl;
     }
 
     return 0;
